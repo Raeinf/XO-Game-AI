@@ -14,8 +14,10 @@ def Map_Changer(Map,Turn,po):
     m=[]
     for i in Map:
         m.append(i.copy())
-    m[0][po[1]]=Turn
+    m[po[0]][po[1]]=Turn
     return m
+
+
 def Check_Win(GameMap):
     for i in range(3):
         if GameMap[i][0] == GameMap[i][1] == GameMap[i][2]:
@@ -59,8 +61,7 @@ def Ai():
                         Think(NewMap,not(Xturn),TempState)
     Think()
 
-    for i in Xwins:
-        print(*i)
+    print(*Xwins[0])
 Ai()
 # for i in GameMap:
 #     print(*i)

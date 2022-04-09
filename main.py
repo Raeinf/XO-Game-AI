@@ -1,14 +1,15 @@
 
+from enum import Flag
 import sys
+from tabnanny import check
 print(sys.setrecursionlimit(40000))
 
 
 
 
-GameMap=[ ["*", "*", "*"]
-         ,["*", "*","*"]
-         ,["*", "*", "*"]]
-
+GameMap=[ ["X", "*", "O"]
+         ,["*", "O","*"]
+         ,["*", "*", "X"]]
 
 def Map_Changer(Map,Turn,po):
     m=[]
@@ -38,30 +39,48 @@ def Check_Win(GameMap):
 def Ai():
     global GameMap
     Xwins=[]
-    Owins=[]
-    Draw=[]
-    def Think(Map=GameMap,Xturn=True,TempState=[]): # here it will calculate all the conditanos..!
-        # there is is little bug here..!
+    def Think(Map,route=[]):
+        for i in range(3):
+            for j in range(3):
+                if Map[i][j] == "*":
+                    r = []
+                    NewMap = Map_Changer(Map, "X", (i, j))
+                    r.append((i, j, "X"))
+                    if Check_Win(NewMap) == "X":
+                        Xwins.append(route+r)
         for i in range(3):
             for j in range(3):
                 if Map[i][j] =="*":
-                    if Xturn:
-                        turn="X"
-                    else:
-                        turn="O"
-                    NewMap=Map_Changer(Map,turn,(i,j))
-                    TempState.append((i,j))
-                    if Check_Win(NewMap)=="X":
-                        Xwins.append(TempState)
-                    elif Check_Win(NewMap)=="O":
-                        Owins.append(TempState)
-                    elif Check_Win(NewMap)=="Draw":
-                        Draw.append(TempState)
-                    else:
-                        Think(NewMap,not(Xturn),TempState)
-    Think()
-
-    print(*Xwins[0])
+                    r=[]
+                    NewMap=Map_Changer(Map,"X",(i,j))
+                    r.append((i,j,"X"))
+                    Flag=True
+                    for q in range(3):
+                        for w in range(3):
+                            if NewMap[q][w] == "*":
+                                r2=[]
+                                NewMap2 = Map_Changer(NewMap, "O", (q, w))
+                                r2.append((q, w, "O"))
+                                if Check_Win(NewMap2) =="O":
+                                    Flag=False
+                                    break
+                    if Flag:
+                        for q in range(3):
+                            for w in range(3):
+                                if NewMap[q][w] == "*":
+                                    r2 = []
+                                    NewMap2 = Map_Changer(NewMap, "O", (q, w))
+                                    r2.append((q, w, "O"))
+                                    Think(NewMap2, route+r+r2)
+                                
+                        
+       
+                        
+         
+     
+    Think(GameMap)
+    for i in Xwins:
+        print(*i)
 Ai()
 # for i in GameMap:
 #     print(*i)

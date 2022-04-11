@@ -1,8 +1,5 @@
 
 
-import sys
-print(sys.setrecursionlimit(40000))
-
 
 
 
